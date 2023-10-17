@@ -2,39 +2,39 @@
         
         .data
         .equ row, 0
-	.equ width, 8
-	.equ height, 12
+		.equ width, 8
+		.equ height, 12
 
         .text
         .global   color_to_gray
         
 color_to_gray:
         stp x29, x30, [sp, #-16]!
-	stp x25, x26, [sp, #-16]!
-	stp x21, x22, [sp, #-16]!
-	mov x25, x0
+		stp x25, x26, [sp, #-16]!
+		stp x21, x22, [sp, #-16]!
+		mov x25, x0
         mov x26, x1 //inv arg
 
-	ldr w1, [x25, height]
-	ldr w0, [x25, width]
+		ldr w1, [x25, height]
+		ldr w0, [x25, width]
 
-	bl allocate_grayimage
-	mov x26, x0
+		bl allocate_grayimage
+		mov x26, x0
         mov w3, #0
-	ldr w14, [x25, height]
-	ldr w15, [x25, width]
+		ldr w14, [x25, height]
+		ldr w15, [x25, width]
 
-	ldr x21, [x25]
-	ldr x22, [x26]
+		ldr x21, [x25]
+		ldr x22, [x26]
 
 	loop1:
-	        cmp x3, x14
-	        bge end1
+	    cmp x3, x14
+	    bge end1
 
-	        mov w4, #0
+	    mov w4, #0
 
-	        ldr x7, [x21, x3 , lsl #3] 
-	        ldr x10, [x22, x3, lsl #3]
+	    ldr x7, [x21, x3 , lsl #3] 
+	    ldr x10, [x22, x3, lsl #3]
 
 	loop2: 
 		cmp x4, x15
@@ -54,13 +54,13 @@ color_to_gray:
 		add x9, x0, x1
 		add x9, x9, x2
 
-                cmp x26, #0
-                b.eq no_inv
+        cmp x26, #0
+        b.eq no_inv
 
-                mvn x9, x9
-                b inversion
+        mvn x9, x9
+        b inversion
 
-no_inv:
+	no_inv:
         lsr x9, x9, #8
 
 inversion:
@@ -70,17 +70,19 @@ inversion:
 
 		//lsr x9, x9, #8
 		//strb w9, [x10, x4]
+
 		add x4, x4, #1
 		b loop2
 
-end2: 
-	add x3, x3, #1
-	b loop1
+	end2: 
+		add x3, x3, #1
+		b loop1
 
-end1:
-	mov x0, x26
+	end1:
+		mov x0, x26
 
-	ldp x21, x22, [sp], #16
-	ldp x25, x26, [sp], #16
-	ldp x29, x30, [sp], #16
-	ret
+		ldp x21, x22, [sp], #16
+		ldp x25, x26, [sp], #16
+		ldp x29, x30, [sp], #16
+
+		ret
