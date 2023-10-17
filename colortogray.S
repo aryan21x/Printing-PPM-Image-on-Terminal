@@ -1,15 +1,19 @@
 //Samarth Naik
-        .text
-        .global   color_to_gray
+        
+        .data
         .equ row, 0
 	.equ width, 8
 	.equ height, 12
 
+        .text
+        .global   color_to_gray
+        
 color_to_gray:
         stp x29, x30, [sp, #-16]!
 	stp x25, x26, [sp, #-16]!
 	stp x21, x22, [sp, #-16]!
 	mov x25, x0
+        mov x26, x1 //inv arg
 
 	ldr w1, [x25, height]
 	ldr w0, [x25, width]
@@ -50,8 +54,22 @@ color_to_gray:
 		add x9, x0, x1
 		add x9, x9, x2
 
-		lsr x9, x9, #8
-		strb w9, [x10, x4]
+                cmp x26, #0
+                b.eq no_inv
+
+                mvn x9, x9
+                b inversion
+
+no_inv:
+        lsr x9, x9, #8
+
+inversion:
+        strb w9, [x10, x4]
+        add x4, x4, #1
+        b loop2
+
+		//lsr x9, x9, #8
+		//strb w9, [x10, x4]
 		add x4, x4, #1
 		b loop2
 
