@@ -16,8 +16,8 @@ find_min_max:
         stp     x25, x26, [sp,#-16]!
 
         mov     x27, x0                     // copy the image in non volatile register x27
-        ldr     x3, [x27, #rows]            // load the address of rows in x3
-        ldr     x5, [x27, #width]           // width
+        ldr     w3, [x27, #height]          // i max in w3
+        ldr     w5, [x27, #width]           // width j max
 
         ldr     x28, [x27]                  // x28 now contains grayimage
 
@@ -42,7 +42,7 @@ j_loop:
         cmp     x7, x5
         bge     i_increament                 // when all the columns are checked
 
-        ldrb     w8, [x10], #1               // load a value from row and increament column
+        ldrb     w8, [x10], #1               // load a  pixel from row and increament 
               
         csel    x25, x25, x8,lt              // comparing if current is less than min
         csel    x26, x26, x8,gt              // comparing if curr is greater than max
