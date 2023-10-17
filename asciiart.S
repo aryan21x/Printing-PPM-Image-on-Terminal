@@ -19,6 +19,7 @@ ascii_art:
         stp     x27, x28, [sp,#-16]!
         stp     x25, x26, [sp,#-16]!
         stp     x23, x24, [sp,#-16]!
+        stp     x21, x22, [sp,#-16]!
 
         mov     x28, x0                         // mov the image to a non volatile register
         mov     x27, x2                         // mov the string asc in non volatile register
@@ -43,6 +44,7 @@ copy_done:
         mov     x2, x26                         // mov length to x2 register
 
         bl      calculate_scale
+        mov     x22, x0                         // store the 's' value in non volatile register
         mov     x24, #0                         // value to be passed as min
 
         b       i_loop
@@ -59,11 +61,12 @@ contrast_apply:
 
         mov     x24, x9                         // store min in non volatile register
 
-        mov     x0, x2                          // mov the max value to parameter 1 
-        mov     x1, x1                          // mov the min value to parameter 2
+        mov     x0, x10                          // mov the max value to parameter 1 
+        mov     x1, x9                          // mov the min value to parameter 2
         mov     x2, x26                         // mov the lengh of asc to parameter 3
 
         bl      calculate_scale
+        mov     x22, x0                         // store the 's' value in non volatile register
 
         ldr     w3, [x28, #height]              // num of rows (i max)
         ldr     w5, [x28, #width]               // num of columns (j max)
@@ -72,14 +75,12 @@ contrast_apply:
 
 i_loop:
         mov     x7, #0                          // j = 0
-        ldr     x10, [x28, x6, lsl #3]          // load w10 with appropriate row
+        ldr     x10, [x28, x6, lsl #3]          // load x10 with appropriate row
 
         cmp     x6, x3                          // compare rows withs i max
-
-        // code to be added
-
         blt     j_loop
 
+        ldp     x21, x22, [sp], #16
         ldp     x23, x24, [sp], #16
         ldp     x25, x26, [sp], #16
         ldp     x27, x28, [sp], #16
@@ -92,8 +93,25 @@ j_loop:
 
         ldrb    w8, [x10], #1                   // load a pixel from row and increament
 
-        // code to be added
-        add     x7, x7, #1
+        sub     x11, x8 , x24                   // x11 contains ( g - min )
+        mul     x11, x22, x11                   // x11 contains s *(g - min)
+
+        mov     x1, #1                          
+        lsl     x1, x1, #15                     // shifting one to the half bit (x1 is 32 bits)
+        add     x0, x11, x1
+        lsr     x0, x0, #16                     // truncating the result to remove fractional bits
+
+        // asc is in x23
+
+        ldr     w15, [x23, x0]                  // load w15 with asc[i] where i is x0
+        mov     w1, w15
+        mov     w2, w15
+        mov     w3, w15                         // since ascii char is 3 times as tall than wide
+
+        ldr     x0, =output                     
+        bl      printf                          // printing on screen
+
+        add     x7, x7, #1                      // increament j
         b       j_loop
 
 increament_i:
