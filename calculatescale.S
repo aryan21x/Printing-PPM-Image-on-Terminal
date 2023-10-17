@@ -19,10 +19,7 @@ calculate_scale:
 
         mov x0, x8
 
-        /*ldr x0, [x0] //max 
-        ldr x1, [x1] //min 
-        ldr x2, [x2] //numAsciiChars
-
+        /*
         sub x2, x2, #1  //numAsciiChars - 1
         sub x0, x0, x1  //max - min
         sdiv x0, x2, x0 //signed division*/
