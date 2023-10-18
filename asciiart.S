@@ -25,6 +25,8 @@ ascii_art:
         mov     x27, x2                         // mov the string asc in non volatile register
         mov     x25, x1                         // mov the contrast to a non volatile register
 
+        ldr     x21, [x28]                      // store the image in non volatile register
+
 copy_asc:
         adr     x23, str                        // load address of str in a non volatile register
         ldrb    w3, [x27],#1
@@ -75,7 +77,7 @@ contrast_apply:
 
 i_loop:
         mov     x7, #0                          // j = 0
-        ldr     x10, [x28, x6, lsl #3]          // load x10 with appropriate row
+        ldr     x10, [x21, x6, lsl #3]          // load x10 with appropriate row
 
         cmp     x6, x3                          // compare rows withs i max
         blt     j_loop
