@@ -21,8 +21,8 @@ find_min_max:
 
         ldr     x28, [x27]                  // x28 now contains grayimage
 
-        mov     x25, #0                     // temp to hold min
-        mov     x26, #0                     // temp to hold max
+        mov     x25, #255                   // temp to hold min
+        mov     x26, #0                   // temp to hold max
 
         mov     x6, #0                      // i = 0
 i_loop:
@@ -31,8 +31,9 @@ i_loop:
         cmp     x6, x3                      // if i has reached max
         blt     j_loop
 
-        mov     x1, x25                     
-        mov     x2, x26
+        str     x25, [x1]                 
+        str     x26, [x2]
+     
         ldp     x25, x26, [sp], #16
         ldp     x27, x28, [sp], #16
         ldp     x29, x30, [sp], #16          // restore the fp and lr
@@ -43,9 +44,13 @@ j_loop:
         bge     i_increament                 // when all the columns are checked
 
         ldrb     w8, [x10], #1               // load a  pixel from row and increament 
-              
-        csel    x25, x25, x8,lt              // comparing if current is less than min
-        csel    x26, x26, x8,gt              // comparing if curr is greater than max
+
+        cmp     x8, x25
+        csel    x25, x8, x25,lt              // comparing if current is less than min
+
+        cmp     x8, x26
+        csel    x26, x8, x26,gt              // comparing if curr is greater than max
+
         add     x7, x7, #1                   // j++
         b       j_loop
 

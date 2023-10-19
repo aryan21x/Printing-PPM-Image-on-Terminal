@@ -2,7 +2,7 @@
         .text
         .global calculate_scale
 
-unsigned int calculate_scale(graypixel max, graypixel min, int numAsciiChars);
+// unsigned int calculate_scale(graypixel max, graypixel min, int numAsciiChars);
 
 calculate_scale:
         stp x29, x30, [sp, #-16]!
