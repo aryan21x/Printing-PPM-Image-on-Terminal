@@ -22,7 +22,7 @@ find_min_max:
         ldr     x28, [x27]                  // x28 now contains grayimage
 
         mov     x25, #255                   // temp to hold min
-        mov     x26, #0                   // temp to hold max
+        mov     x26, #0                     // temp to hold max
 
         mov     x6, #0                      // i = 0
 i_loop:

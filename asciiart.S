@@ -20,6 +20,7 @@ ascii_art:
         stp     x25, x26, [sp,#-16]!
         stp     x23, x24, [sp,#-16]!
         stp     x21, x22, [sp,#-16]!
+        stp     x19, x20, [sp,#-16]!
 
         mov     x28, x0                         // mov the image to a non volatile register
         mov     x27, x2                         // mov the string asc in non volatile register
@@ -82,6 +83,7 @@ i_loop:
         cmp     x6, x9                          // compare rows withs i max
         blt     j_loop
 
+        ldp     x19, x20, [sp], #16
         ldp     x21, x22, [sp], #16
         ldp     x23, x24, [sp], #16
         ldp     x25, x26, [sp], #16
