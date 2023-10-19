@@ -15,12 +15,12 @@ output: .asciz          "%c%c%c"
         .global         ascii_art
 
 ascii_art:
-        stp     x29, x30, [sp,#-16]!
-        stp     x27, x28, [sp,#-16]!
-        stp     x25, x26, [sp,#-16]!
-        stp     x23, x24, [sp,#-16]!
-        stp     x21, x22, [sp,#-16]!
-        stp     x19, x20, [sp,#-16]!
+        stp     x29, x30, [sp,#-16]!            // fp and lr 
+        stp     x27, x28, [sp,#-16]!            // asc and image
+        stp     x25, x26, [sp,#-16]!            // contrast and len(asc)
+        stp     x23, x24, [sp,#-16]!            // asc and min
+        stp     x21, x22, [sp,#-16]!            // stored image, scaling
+        stp     x19, x20, [sp,#-16]!            // i and j
 
         mov     x28, x0                         // mov the image to a non volatile register
         mov     x27, x2                         // mov the string asc in non volatile register
@@ -71,16 +71,16 @@ contrast_apply:
         bl      calculate_scale
         mov     x22, x0                         // store the 's' value in non volatile register
 
+        mov     x19, #0                          // i = 0
+
+i_loop:
         ldr     w9, [x28, #height]              // num of rows (i max)
         ldr     w5, [x28, #width]               // num of columns (j max)
 
-        mov     x6, #0                          // i = 0
+        mov     x20, #0                          // j = 0
+        ldr     x10, [x21, x19, lsl #3]          // load x10 with appropriate row
 
-i_loop:
-        mov     x7, #0                          // j = 0
-        ldr     x10, [x21, x6, lsl #3]          // load x10 with appropriate row
-
-        cmp     x6, x9                          // compare rows withs i max
+        cmp     x19, x9                          // compare rows withs i max
         blt     j_loop
 
         ldp     x19, x20, [sp], #16
@@ -92,7 +92,7 @@ i_loop:
         ret
 
 j_loop:
-        cmp     x7, x5
+        cmp     x20, x5
         bge     increament_i
 
         ldrb    w8, [x10], #1                   // load a pixel from row and increament
@@ -115,11 +115,11 @@ j_loop:
         ldr     x0, =output                     
         bl      printf                          // printing on screen
 
-        add     x7, x7, #1                      // increament j
+        add     x20, x20, #1                      // increament j
         b       j_loop
 
 increament_i:
-        add     x6, x6 , #1
+        add     x19, x19 , #1
         b       i_loop
 
 

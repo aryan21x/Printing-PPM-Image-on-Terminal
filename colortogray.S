@@ -6,13 +6,17 @@
 
         .text
         .global   color_to_gray
-        
+
+// grayimage *color_to_gray(rgbimage *image, int invert);
+
 color_to_gray:  
         stp x29, x30, [sp, #-16]!
 		stp x25, x26, [sp, #-16]!
 		stp x21, x22, [sp, #-16]!
+		stp	x19, x20, [sp, #-16]!
+
 		mov x25, x0							// mov image to non volatile register
-        mov x26, x1 						// inversion check
+        mov x20, x1 						// inversion check
 
 		ldr w1, [x25, height]				// load max rows
 		ldr w0, [x25, width]				// load max columns
@@ -27,7 +31,7 @@ color_to_gray:
 		ldr x22, [x26]						// load allocate_grayimage to non volatile register
 
 loop1:
-		mov w4, #0							// i = 0
+		mov w4, #0							// j = 0
 		ldr x7, [x21, x3 , lsl #3] 			// load adress of row from image
 	    ldr x10, [x22, x3, lsl #3]			// load adress of row from allocate_grayimage 
 
@@ -35,6 +39,8 @@ loop1:
 	    blt loop2
 
 		mov x0, x26							// return grayimage
+
+		ldp	x19, x20, [sp], #16
 		ldp x21, x22, [sp], #16
 		ldp x25, x26, [sp], #16
 		ldp x29, x30, [sp], #16
@@ -60,20 +66,18 @@ loop2:
 		add x9, x9, x2
  
 		lsr x9, x9, #8
-        cmp x26, #0							// check if inversion is supplied
-        beq no_inv		
+        
+		cmp x20, #0							// check if inversion is supplied
+        beq no_inv
 
-        b inversion							
-
-no_inv:
-		strb w9, [x10, x4]					// store without inversion
+inversion:
+		mvn  x9, x9  						// invert all pixels and store
+        strb w9, [x10, x4]
         add x4, x4, #1
 		b loop2
 
-inversion:
-		mov x15, #255
-		sub  x9 , x15, x9					// invert all pixels and then store
-        strb w9, [x10, x4]
+no_inv:
+		strb w9, [x10, x4]					// store without inversion
         add x4, x4, #1
 		b loop2
 
