@@ -63,7 +63,6 @@ loop2:
         cmp x26, #0
         beq no_inv
 
-        mvn x9, x9
         b inversion
 
 no_inv:

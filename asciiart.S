@@ -70,7 +70,7 @@ contrast_apply:
         bl      calculate_scale
         mov     x22, x0                         // store the 's' value in non volatile register
 
-        ldr     w3, [x28, #height]              // num of rows (i max)
+        ldr     w9, [x28, #height]              // num of rows (i max)
         ldr     w5, [x28, #width]               // num of columns (j max)
 
         mov     x6, #0                          // i = 0
@@ -79,7 +79,7 @@ i_loop:
         mov     x7, #0                          // j = 0
         ldr     x10, [x21, x6, lsl #3]          // load x10 with appropriate row
 
-        cmp     x6, x3                          // compare rows withs i max
+        cmp     x6, x9                          // compare rows withs i max
         blt     j_loop
 
         ldp     x21, x22, [sp], #16
