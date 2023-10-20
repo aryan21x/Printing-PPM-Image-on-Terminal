@@ -9,7 +9,8 @@
         .equ    size,   16
 
 str:    .asciz          ""
-output: .asciz          "%c%c%c"                       
+output: .asciz          "%c%c%c"   
+newline: .asciz          "\n"                    
 
         .text
         .global         ascii_art
@@ -18,7 +19,7 @@ ascii_art:
         stp     x29, x30, [sp,#-16]!            // fp and lr 
         stp     x27, x28, [sp,#-16]!            // asc and image
         stp     x25, x26, [sp,#-16]!            // contrast and len(asc)
-        stp     x23, x24, [sp,#-16]!            // asc and min
+        stp     x23, x24, [sp,#-16]!            // asc and min (later for loading x23 is used)
         stp     x21, x22, [sp,#-16]!            // stored image, scaling
         stp     x19, x20, [sp,#-16]!            // i and j
 
@@ -95,7 +96,7 @@ i_loop:
 j_loop:
         ldr     w9, [x28, #height]              // num of rows (i max)
         ldr     w5, [x28, #width]               // num of columns (j max)
-        
+
         cmp     x20, x5
         bge     increament_i
 
@@ -119,10 +120,12 @@ j_loop:
         ldr     x0, =output                     
         bl      printf                          // printing on screen
 
-        add     x20, x20, #1                      // increament j
+        add     x20, x20, #1                    // increament j
         b       j_loop
 
 increament_i:
+        adr     x0, newline                     // newline after every row
+        bl      printf
         add     x19, x19 , #1
         b       i_loop
 
