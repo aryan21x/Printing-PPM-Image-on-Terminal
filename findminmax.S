@@ -31,8 +31,8 @@ i_loop:
         cmp     x6, x3                      // if i has reached max
         blt     j_loop
 
-        str     x25, [x1]                 
-        str     x26, [x2]
+        mov     x1, x25                 
+        mov     x2, x26
      
         ldp     x25, x26, [sp], #16
         ldp     x27, x28, [sp], #16
