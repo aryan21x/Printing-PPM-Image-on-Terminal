@@ -76,6 +76,7 @@ contrast_apply:
         mov     x19, #0                          // i = 0
 
 i_loop:
+
         ldr     w9, [x28, #height]              // num of rows (i max)
         ldr     w5, [x28, #width]               // num of columns (j max)
 
@@ -112,7 +113,7 @@ j_loop:
 
         // asc is in x23
 
-        ldr     w15, [x27, x0]                  // load w15 with asc[i] where i is x0
+        ldrb    w15, [x27, x0]                  // load w15 with asc[i] where i is x0
         mov     w1, w15
         mov     w2, w15
         mov     w3, w15                         // since ascii char is 3 times as tall than wide
