@@ -39,17 +39,18 @@ count_asc:
 
 count_done:
 
-        cmp     x25, #0
-        bne     contrast_apply
+        cmp     x25, #1
+        beq     contrast_apply
 
-        mov     x0, #0
-        mov     x1, #255                        
+        mov     x0, #255
+        mov     x1, #0                        
         mov     x2, x26                         // mov length to x2 register
 
         bl      calculate_scale
         mov     x22, x0                         // store the 's' value in non volatile register
         mov     x24, #0                         // value to be passed as min
 
+        mov     x19, #0                          // i = 0
         b       i_loop
 
 contrast_apply:
@@ -78,7 +79,7 @@ i_loop:
         ldr     w5, [x28, #width]               // num of columns (j max)
 
         mov     x20, #0                          // j = 0
-        ldr     x10, [x21, x19, lsl #3]          // load x10 with appropriate row
+        ldr     x23, [x21, x19, lsl #3]          // load x10 with appropriate row
 
         cmp     x19, x9                          // compare rows withs i max
         blt     j_loop
@@ -92,10 +93,13 @@ i_loop:
         ret
 
 j_loop:
+        ldr     w9, [x28, #height]              // num of rows (i max)
+        ldr     w5, [x28, #width]               // num of columns (j max)
+        
         cmp     x20, x5
         bge     increament_i
 
-        ldrb    w8, [x10], #1                   // load a pixel from row and increament
+        ldrb    w8, [x23], #1                   // load a pixel from row and increament
 
         sub     x11, x8 , x24                   // x11 contains ( g - min )
         mul     x11, x22, x11                   // x11 contains s *(g - min)
@@ -107,7 +111,7 @@ j_loop:
 
         // asc is in x23
 
-        ldr     w15, [x23, x0]                  // load w15 with asc[i] where i is x0
+        ldr     w15, [x27, x0]                  // load w15 with asc[i] where i is x0
         mov     w1, w15
         mov     w2, w15
         mov     w3, w15                         // since ascii char is 3 times as tall than wide
