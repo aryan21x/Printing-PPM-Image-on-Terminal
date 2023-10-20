@@ -27,17 +27,17 @@ ascii_art:
         mov     x25, x1                         // mov the contrast to a non volatile register
 
         ldr     x21, [x28]                      // store the image in non volatile register
+        mov     x23, x27                        // mov the asc to x27
+        mov     x26, #0                         // set count = 0
 
-copy_asc:
-        adr     x23, str                        // load address of str in a non volatile register
-        ldrb    w3, [x27],#1
-        strb    w3, [x23],#1                    // store asc in str
-        cbz     w3, copy_done
+count_asc:
+        ldrb    w0, [x23], #1;
+        cmp     w0, #0
+        beq     count_done
+        add     x26, x26, #1
+        b       count_asc
 
-copy_done:
-        adr     x0, str                         // load asc from str
-        bl      strlen
-        mov     x26, x0                         // mov the lengh to non volatile register
+count_done:
 
         cmp     x25, #0
         bne     contrast_apply
