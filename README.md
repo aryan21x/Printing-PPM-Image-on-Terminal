@@ -1,7 +1,9 @@
 PRINT PPM IMAGE ON TERMINAL
-
+<br>
 Languages -- Arm Assembly 64-bit and C
+<br
 Build -- make
+<br>
 Run -- ./asciiart image.ppm [optional]
 
 Program takes a ppm image as input and prints it on the terminalu using a string of character
