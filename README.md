@@ -1,7 +1,7 @@
 PRINT PPM IMAGE ON TERMINAL
 <br>
 Languages -- Arm Assembly 64-bit and C
-<br
+<br>
 Build -- make
 <br>
 Run -- ./asciiart image.ppm [optional]
